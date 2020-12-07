@@ -26,13 +26,16 @@ class GeofenceTransitionsJobIntentService : JobIntentService(), CoroutineScope {
         fun enqueueWork(context: Context, intent: Intent) {
             enqueueWork(
                 context,
-                GeofenceTransitionsJobIntentService::class.java, JOB_ID,
+                GeofenceTransitionsJobIntentService::class.java,
+                JOB_ID,
                 intent
             )
         }
     }
 
     override fun onHandleWork(intent: Intent) {
+        enqueueWork(this, intent)
+        // sendNotification()
         //TODO: handle the geofencing transition events and
         // send a notification to the user when he enters the geofence area
         //TODO call @sendNotification
