@@ -104,6 +104,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     }
 
     private fun setPoiClick(map: GoogleMap) {
+        map.clear()
         map.setOnPoiClickListener {
             val poiMarker = map.addMarker(
                 MarkerOptions()
@@ -112,7 +113,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
             )
             poiMarker.showInfoWindow()
             pointOfInterest = it
-            //addCircle()
+            addCircle(it.latLng, _viewModel.GEOFENCE_RADIUS)
         }
     }
 

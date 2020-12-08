@@ -27,7 +27,7 @@ class GeofenceHelper(base: Context?) : ContextWrapper(base) {
             .setCircularRegion(latLng.latitude, latLng.longitude, radius)
             .setRequestId(ID)
             .setTransitionTypes(transitionTypes)
-            .setLoiteringDelay(5000)
+            .setLoiteringDelay(1000)
             .setExpirationDuration(Geofence.NEVER_EXPIRE)
             .build()
     }
@@ -37,6 +37,7 @@ class GeofenceHelper(base: Context?) : ContextWrapper(base) {
             return pendingIntent
         }
         val intent = Intent(this, GeofenceBroadcastReceiver::class.java)
+
         pendingIntent =
             PendingIntent.getBroadcast(this, 2607, intent, PendingIntent.FLAG_UPDATE_CURRENT)
         return pendingIntent
@@ -51,9 +52,5 @@ class GeofenceHelper(base: Context?) : ContextWrapper(base) {
             }
         }
         return e.localizedMessage
-    }
-
-    companion object {
-        private const val TAG = "GeofenceHelper"
     }
 }
