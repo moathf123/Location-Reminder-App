@@ -67,9 +67,7 @@ class SaveReminderFragment : BaseFragment() {
             val longitude = _viewModel.longitude.value
 
             reminder = ReminderDataItem(title, description, location, latitude, longitude)
-//            TODO: use the user entered reminder details to:
-//             1) add a geofencing request
-//             2) save the reminder to the local db
+
             val LatLng = LatLng(latitude!!, longitude!!)
             addGeofence(LatLng, _viewModel.GEOFENCE_RADIUS, reminder.id)
             _viewModel.validateAndSaveReminder(reminder)
@@ -118,7 +116,6 @@ class SaveReminderFragment : BaseFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        // removeGeofences()
         //make sure to clear the view model after destroy, as it's a single view model.
         _viewModel.onClear()
     }
