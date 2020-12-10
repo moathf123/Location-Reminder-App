@@ -1,8 +1,9 @@
 package com.udacity.project4.locationreminders.savereminder
 
+import android.app.Application
 import android.os.Build
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.test.core.app.ApplicationProvider
+import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.udacity.project4.R
 import com.udacity.project4.locationreminders.MainCoroutineRule
@@ -31,6 +32,7 @@ class SaveReminderViewModelTest {
 
     private lateinit var fakeDataSource: FakeDataSource
 
+    private lateinit var appContext: Application
 
     // Set the main coroutines dispatcher for unit testing.
     @get:Rule
@@ -44,8 +46,9 @@ class SaveReminderViewModelTest {
     fun setupViewModel() = runBlockingTest {
         fakeDataSource = FakeDataSource()
 
+        appContext = getApplicationContext()
         saveReminderViewModel = SaveReminderViewModel(
-            ApplicationProvider.getApplicationContext(),
+            appContext,
             fakeDataSource
         )
     }
@@ -58,18 +61,38 @@ class SaveReminderViewModelTest {
 
         assertThat(saveReminderViewModel.showLoading.getOrAwaitValue(), `is`(true))
 
+        mainCoroutineRule.resumeDispatcher()
+
+        assertThat(saveReminderViewModel.showLoading.getOrAwaitValue(), `is`(false))
+        assertThat(
+            saveReminderViewModel.showToast.getOrAwaitValue(),
+            `is`(appContext.getString(R.string.reminder_saved))
+        )
     }
 
     @Test
-    fun shouldReturnError_test() {
+    fun shouldReturnErrorSnackBar_emptyTitle() {
         saveReminderViewModel =
-            SaveReminderViewModel(ApplicationProvider.getApplicationContext(), fakeDataSource)
+            SaveReminderViewModel(appContext, fakeDataSource)
         val reminder1 = ReminderDataItem(null, null, null, 32.1, 32.1)
         saveReminderViewModel.validateEnteredData(reminder1)
 
         assertThat(
             saveReminderViewModel.showSnackBarInt.getOrAwaitValue(),
             `is`(R.string.err_enter_title)
+        )
+    }
+
+    @Test
+    fun shouldReturnErrorSnackBar_emptylocation() {
+        saveReminderViewModel =
+            SaveReminderViewModel(appContext, fakeDataSource)
+        val reminder1 = ReminderDataItem("Title", null, null, 32.1, 32.1)
+        saveReminderViewModel.validateEnteredData(reminder1)
+
+        assertThat(
+            saveReminderViewModel.showSnackBarInt.getOrAwaitValue(),
+            `is`(R.string.err_select_location)
         )
 
     }

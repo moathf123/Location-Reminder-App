@@ -1,5 +1,6 @@
 package com.udacity.project4.locationreminders.data.local
 
+import android.app.Application
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
@@ -22,6 +23,7 @@ class RemindersLocalRepositoryTest {
 
     private lateinit var localDataSource: RemindersLocalRepository
     private lateinit var database: RemindersDatabase
+    private lateinit var appContext: Application
 
     // Executes each task synchronously using Architecture Components.
     @get:Rule
@@ -29,9 +31,10 @@ class RemindersLocalRepositoryTest {
 
     @Before
     fun setup() {
+        appContext = ApplicationProvider.getApplicationContext()
 
         database = Room.inMemoryDatabaseBuilder(
-            ApplicationProvider.getApplicationContext(),
+            appContext,
             RemindersDatabase::class.java
         )
             .allowMainThreadQueries()

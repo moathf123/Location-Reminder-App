@@ -79,9 +79,6 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     }
 
     private fun onLocationSelected(currentLocation: LatLng) {
-        //        TODO: When the user confirms on the selected location,
-        //         send back the selected location details to the view model
-        //         and navigate back to the previous fragment to save the reminder and add the geofence
         _viewModel.latitude.value = currentLocation.latitude
         _viewModel.longitude.value = currentLocation.longitude
         _viewModel.selectedPOI.value = pointOfInterest
@@ -207,6 +204,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     })
                 }.show()
+            _viewModel.showErrorMessage.value = R.string.permission_denied_explanation.toString()
         } else {
             checkDeviceLocationSettings()
         }
@@ -243,6 +241,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                 ).setAction(android.R.string.ok) {
                     checkDeviceLocationSettings()
                 }.show()
+                _viewModel.showErrorMessage.value = R.string.location_required_error.toString()
             }
         }
         locationSettingsResponseTask.addOnCompleteListener {

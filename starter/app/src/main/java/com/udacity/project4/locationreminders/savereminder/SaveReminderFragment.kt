@@ -88,11 +88,11 @@ class SaveReminderFragment : BaseFragment() {
         pendingIntent = geofenceHelper.getPendingsIntent()!!
 
 
-
         geofencingClient.addGeofences(geofencingRequest, pendingIntent)
             .addOnSuccessListener { d { "onSuccess: Geofence Added..." } }
             .addOnFailureListener { e ->
                 val errorMessage = geofenceHelper.getErrorString(e)
+                _viewModel.showErrorMessage.value = geofenceHelper.getErrorString(e)
                 d { "onFailure: $errorMessage" }
             }
 
@@ -109,6 +109,7 @@ class SaveReminderFragment : BaseFragment() {
             }
             addOnFailureListener {
                 // Failed to remove geofences
+                _viewModel.showErrorMessage.value = geofenceHelper.getErrorString(it)
                 d { "falied to remove geofences" }
             }
         }

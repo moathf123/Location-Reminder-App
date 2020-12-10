@@ -40,6 +40,10 @@ import org.koin.test.get
 @MediumTest
 class ReminderListFragmentTest : AutoCloseKoinTest() {
 
+//    TODO: test the navigation of the fragments.
+//    TODO: test the displayed data on the UI.
+//    TODO: add testing for the error messages.
+
     private lateinit var repository: ReminderDataSource
     private lateinit var appContext: Application
 
@@ -125,28 +129,15 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
 
 
     @Test
-    fun shouldReturnError_errorMessages() = runBlocking {
-        val reminder1 = ReminderDTO("Title1", "Description1", "location1", 32.1, 32.1)
-        repository.saveReminder(reminder1)
+    fun shouldReturnError_errorMessage() = runBlocking {
+        repository.deleteAllReminders()
         // Start up Tasks screen
         val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
         dataBindingIdlingResource.monitorActivity(activityScenario)
 
         onView(withId(R.id.logout)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        onView(withId(R.id.title)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        onView(withId(R.id.description)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        onView(withId(R.id.noDataTextView)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
 
-
-        onView(withId(R.id.addReminderFAB)).perform(click())
-        onView(withId(R.id.selectLocation)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        onView(withId(R.id.reminderDescription)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        onView(withId(R.id.reminderTitle)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-
-
-        onView(withId(R.id.selectLocation)).perform(click())
-        onView(withId(R.id.map_view)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-
-        onView(withId(R.id.map_view)).perform(click())
 
         activityScenario.close()
     }
@@ -154,6 +145,4 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
 }
 
 
-//    TODO: test the navigation of the fragments.
-//    TODO: test the displayed data on the UI.
-//    TODO: add testing for the error messages.
+
